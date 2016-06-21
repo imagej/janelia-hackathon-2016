@@ -2,6 +2,7 @@ package net.imagej.usecase;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import net.imglib2.RandomAccessible;
 import net.imglib2.RandomAccessibleInterval;
@@ -54,4 +55,37 @@ public class Registration
 	{
 		throw new UnsupportedOperationException( "not implemented" );
 	}
+
+
+
+	// ===========================================================================
+
+
+
+	public < T extends RealType< T > >
+	Map< Long, AffineGet > registerSlices(
+			final RandomAccessibleInterval< T > data, // assumes data is XYT or XYZT
+			final double[] spatialCalib )
+	{
+		final int numSpatialDimensions = data.numDimensions() - 1;
+		final AffineTransform calib = new AffineTransform( numSpatialDimensions );
+		for ( int d = 0; d < numSpatialDimensions; ++d )
+			calib.set( spatialCalib[ d ], d, d );
+
+		final Map< Long, AffineGet > transforms = new HashMap<>();
+
+		for ( final Entry< Long, AffineGet > entry : registerSlices( data ).entrySet() )
+		{
+			final Long t = entry.getKey();
+			final AffineGet transformToT0 = entry.getValue();
+			final AffineTransform transform = calib.copy();
+			transform.concatenate( transformToT0 );
+			transforms.put( t, transform );
+		}
+
+		return transforms;
+	}
+
+
+
 }
