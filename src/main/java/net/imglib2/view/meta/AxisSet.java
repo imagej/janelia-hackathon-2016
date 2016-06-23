@@ -107,4 +107,23 @@ public class AxisSet implements EuclideanSpace
 			}
 		};
 	}
+
+    @Override
+	public String toString() {
+        final StringBuilder sb = new StringBuilder( "[" );
+		boolean first = true;
+		for ( int d = 0; d < flags.length; ++d )
+		{
+			if ( flags[ d ] )
+			{
+				if ( !first )
+					sb.append( ", " );
+				else
+					first = false;
+				sb.append( d );
+			}
+		}
+		sb.append( "]" );
+		return sb.toString();
+    }
 }
