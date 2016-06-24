@@ -1,15 +1,29 @@
+
 package net.imagej.visad;
 
-import net.imglib2.RealLocalizable;
-import net.imglib2.RealPositionable;
+import net.imglib2.realtransform.InverseRealTransform;
 import net.imglib2.realtransform.InvertibleRealTransform;
 
 import visad.GriddedDoubleSet;
 import visad.VisADException;
 
-public class GriddedSetTransform implements InvertibleRealTransform {
+/**
+ * An ImgLib2 {@link InvertibleRealTransform} backed by a
+ * {@link GriddedDoubleSet}.
+ * <p>
+ * The source space set's continuous M-dimensional grid. The target space is the
+ * N-dimensional value coordinates given by the set.
+ * </p>
+ *
+ * @author Curtis Rueden
+ */
+public class GriddedSetTransform extends AbstractVisADTransform {
 
-	private GriddedDoubleSet set;
+	private final GriddedDoubleSet set;
+
+	public GriddedSetTransform(final GriddedDoubleSet set) {
+		this.set = set;
+	}
 
 	@Override
 	public int numSourceDimensions() {
@@ -22,100 +36,53 @@ public class GriddedSetTransform implements InvertibleRealTransform {
 	}
 
 	@Override
-	public void apply(double[] source, double[] target) {
+	public void apply(final double[] source, final double[] target) {
 		try {
-			unwrap(set.gridToDouble(wrap(source)), target);
+			unwrap_d2_d1(set.gridToDouble(wrap_d1_d2(source)), target);
 		}
-		catch (VisADException exc) {
-			// TODO Auto-generated catch block
-			exc.printStackTrace();
+		catch (final VisADException exc) {
+			fail(exc);
 		}
 	}
 
 	@Override
-	public void apply(float[] source, float[] target) {
+	public void apply(final float[] source, final float[] target) {
 		try {
-			unwrap(set.gridToValue(wrap(source)), target);
+			unwrap_f2_f1(set.gridToValue(wrap_f1_f2(source)), target);
 		}
-		catch (VisADException exc) {
-			// TODO Auto-generated catch block
-			exc.printStackTrace();
+		catch (final VisADException exc) {
+			fail(exc);
 		}
 	}
 
 	@Override
-	public void apply(RealLocalizable source, RealPositionable target) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void applyInverse(double[] source, double[] target) {
+	public void applyInverse(final double[] source, final double[] target) {
 		try {
-			unwrap(set.doubleToGrid(wrap(source)), target);
+			unwrap_d2_d1(set.doubleToGrid(wrap_d1_d2(target)), source);
 		}
-		catch (VisADException exc) {
-			// TODO Auto-generated catch block
-			exc.printStackTrace();
+		catch (final VisADException exc) {
+			fail(exc);
 		}
 	}
 
 	@Override
-	public void applyInverse(float[] source, float[] target) {
+	public void applyInverse(final float[] source, final float[] target) {
 		try {
-			unwrap(set.valueToGrid(wrap(source)), target);
+			unwrap_f2_f1(set.valueToGrid(wrap_f1_f2(target)), source);
 		}
-		catch (VisADException exc) {
-			// TODO Auto-generated catch block
-			exc.printStackTrace();
+		catch (final VisADException exc) {
+			fail(exc);
 		}
-	}
-
-	@Override
-	public void applyInverse(RealPositionable source, RealLocalizable target) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public InvertibleRealTransform inverse() {
-		// TODO Auto-generated method stub
-		return null;
+		return new InverseRealTransform(this);
 	}
 
 	@Override
-	public InvertibleRealTransform copy() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	// -- Helper methods --
-
-	private void unwrap(float[][] source, float[] target) {
-		for (int d=0; d<source.length; d++) {
-			target[d] = source[d][0];
-		}
-	}
-
-	private float[][] wrap(float[] source) {
-		final float[][] visad = new float[source.length][1];
-		for (int d=0; d<source.length; d++) {
-			visad[d][0] = source[d];
-		}
-		return visad;
-	}
-
-	private void unwrap(double[][] source, double[] target) {
-		for (int d=0; d<source.length; d++) {
-			target[d] = source[d][0];
-		}
-	}
-
-	private double[][] wrap(double[] source) {
-		final double[][] visad = new double[source.length][1];
-		for (int d=0; d<source.length; d++) {
-			visad[d][0] = source[d];
-		}
-		return visad;
+	public GriddedSetTransform copy() {
+		return new GriddedSetTransform(set);
 	}
 
 }
