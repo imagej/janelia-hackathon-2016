@@ -2,9 +2,46 @@ package net.imglib2.view.meta;
 
 import net.imglib2.transform.integer.Mixed;
 import net.imglib2.transform.integer.MixedTransform;
+import net.imglib2.util.Util;
 
 public class MixedTransforms
 {
+
+	public static void main( final String[] args )
+	{
+		final int[] source = new int[] { 1, 2, 3 };
+		final int[] target = new int[ 3 ];
+
+		System.out.println( Util.printCoordinates( source ) );
+
+		final Mixed rotationTransform = getRotationTransform( 0, 1, 3 );
+		rotationTransform.apply( source, target );
+		System.out.println( "rotate(0,1) -> " + Util.printCoordinates( target ) );
+	}
+
+
+
+	/*
+	 * Interrogating (transformed) metadata:
+	 *
+	 * 1.) Give me everything that is attached to the X-axis!
+	 *     --> Go through transformToSource to get the corresponding source axis A and get the stuff for A
+	 *
+	 * 2.) Give me first item of type "calib"!
+	 *     --> Look up in metadata Map
+	 *     UNCLEAR. Stuff may have been invalidated/removed, eg, slicing X removes "X calib".
+	 *
+	 *     returns "X calib" item
+	 * 3.) Which axis/axes is it attached to?
+	 *     -->
+	 *
+	 *
+	 */
+
+
+
+
+
 	/**
 	 * Create the {@link AxisBimap} from source space to target space of the
 	 * given {@link Mixed} transform.

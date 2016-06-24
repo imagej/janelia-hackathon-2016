@@ -9,9 +9,12 @@ import net.imglib2.Point;
 import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.img.array.ArrayImgs;
+import net.imglib2.iterator.IntervalIterator;
 import net.imglib2.transform.integer.Mixed;
 import net.imglib2.transform.integer.MixedTransform;
 import net.imglib2.type.numeric.integer.IntType;
+import net.imglib2.util.Util;
+import net.imglib2.view.meta.MixedTransforms;
 
 public class MetaViews
 {
@@ -23,16 +26,16 @@ public class MetaViews
 		final ArrayList< MetaDataItem< ? > > metadata = new ArrayList<>();
 
 		metadata.add(
-				new SimpleItem< >( "X Calib", "2 um",
+				new SimpleItem<>( "X Calib", "2 um",
 						axisCollectionToFlags( numDimensions, new int[] { 0 } ) ) );
 		metadata.add(
-				new SimpleItem< >( "Y Calib", "5 um",
+				new SimpleItem<>( "Y Calib", "5 um",
 						axisCollectionToFlags( numDimensions, new int[] { 1 } ) ) );
 		metadata.add(
-				new SimpleItem< >( "Z Calib", "10 um",
+				new SimpleItem<>( "Z Calib", "10 um",
 						axisCollectionToFlags( numDimensions, new int[] { 2 } ) ) );
 		metadata.add(
-				new SimpleItem< >( "Spatial", "isSpatial",
+				new SimpleItem<>( "Spatial", "isSpatial",
 						axisCollectionToFlags( numDimensions, new int[] { 0, 1, 2 } ) ) );
 
 		final int[] numbersXY = new int[] {
@@ -65,7 +68,7 @@ public class MetaViews
 		for ( final MetaDataItem< ? > item : metadata )
 			System.out.println( hyperSlice( permute( item, 2, 4 ), 4, 0 ) );
 
-/*
+
 		System.out.println();
 		System.out.println( "--------------------" );
 		System.out.println();
@@ -107,8 +110,6 @@ public class MetaViews
 			System.out.println( Util.printCoordinates( coords ) + " -> " +
 					hyperSlice( permute( numbersXYItem, 1, 4 ), 0, 1 ).getAt( i ) );
 		}
-
-*/
 	}
 
 
@@ -253,7 +254,7 @@ public class MetaViews
 		final int numSourceDimensions = getNumSourceDimensions( item );
 		if ( numSourceDimensions < 0 )
 			return item;
-		return mixedTransform( item, getRotationTransform( fromAxis, toAxis, numSourceDimensions ) );
+		return mixedTransform( item, MixedTransforms.getRotationTransform( fromAxis, toAxis, numSourceDimensions ) );
 	}
 
 
@@ -264,7 +265,7 @@ public class MetaViews
 		final int numSourceDimensions = getNumSourceDimensions( item );
 		if ( numSourceDimensions < 0 )
 			return item;
-		return mixedTransform( item, getPermuteTransform( fromAxis, toAxis, numSourceDimensions ) );
+		return mixedTransform( item, MixedTransforms.getPermuteTransform( fromAxis, toAxis, numSourceDimensions ) );
 	}
 
 
@@ -273,7 +274,7 @@ public class MetaViews
 		final int numSourceDimensions = getNumSourceDimensions( item );
 		if ( numSourceDimensions < 0 )
 			return item;
-		return mixedTransform( item, getHyperSliceTransform( d, pos, numSourceDimensions ) );
+		return mixedTransform( item, MixedTransforms.getHyperSliceTransform( d, pos, numSourceDimensions ) );
 	}
 
 
@@ -401,86 +402,6 @@ public class MetaViews
 		return new VaryingItem<>( item.name, transformedData, variesWithAxes, attachedToAxes );
 	}
 
-	/*
-	 * MixedTransform helpers
-	 */
-
-	// TODO: this is copied from Views.rotate. Should be reused.
-	public static MixedTransform getRotationTransform( final int fromAxis, final int toAxis, final int n )
-	{
-		final MixedTransform t = new MixedTransform( n, n );
-		if ( fromAxis != toAxis )
-		{
-			final int[] component = new int[ n ];
-			final boolean[] inv = new boolean[ n ];
-			for ( int e = 0; e < n; ++e )
-			{
-				if ( e == toAxis )
-				{
-					component[ e ] = fromAxis;
-					inv[ e ] = true;
-				}
-				else if ( e == fromAxis )
-				{
-					component[ e ] = toAxis;
-				}
-				else
-				{
-					component[ e ] = e;
-				}
-			}
-			t.setComponentMapping( component );
-			t.setComponentInversion( inv );
-		}
-		return t;
-	}
-
-	// TODO: this is copied from Views.permute. Should be reused.
-	public static MixedTransform getPermuteTransform( final int fromAxis, final int toAxis, final int n )
-	{
-		final int[] component = new int[ n ];
-		for ( int e = 0; e < n; ++e )
-			component[ e ] = e;
-		component[ fromAxis ] = toAxis;
-		component[ toAxis ] = fromAxis;
-		final MixedTransform t = new MixedTransform( n, n );
-		t.setComponentMapping( component );
-		return t;
-	}
-
-	// TODO: this is copied from Views.hyperSlice. Should be reused.
-	public static MixedTransform getHyperSliceTransform( final int d, final long pos, final int m )
-	{
-		final int n = m - 1;
-		final MixedTransform t = new MixedTransform( n, m );
-		final long[] translation = new long[ m ];
-		translation[ d ] = pos;
-		final boolean[] zero = new boolean[ m ];
-		final int[] component = new int[ m ];
-		for ( int e = 0; e < m; ++e )
-		{
-			if ( e < d )
-			{
-				zero[ e ] = false;
-				component[ e ] = e;
-			}
-			else if ( e > d )
-			{
-				zero[ e ] = false;
-				component[ e ] = e - 1;
-			}
-			else
-			{
-				zero[ e ] = true;
-				component[ e ] = 0;
-			}
-		}
-		t.setTranslation( translation );
-		t.setComponentZero( zero );
-		t.setComponentMapping( component );
-		return t;
-	}
-
 	private static int getNumSourceDimensions( final MetaDataItem< ? > item )
 	{
 		if ( item instanceof SimpleItem )
@@ -527,26 +448,6 @@ public class MetaViews
 			if ( flags[ d ] )
 				tmp[ i++ ] = d;
 		return Arrays.copyOfRange( tmp, 0, i );
-	}
-
-	/**
-	 * Swap values of {@code flags[i]} and {@code flags[j]} in-place.
-	 *
-	 * @param flags
-	 * @param i
-	 *            index in {@code flags}
-	 * @param j
-	 *            index in {@code flags}
-	 * @return {@code flags}.
-	 */
-	private static boolean[] swap( final boolean[] flags, final int i, final int j )
-	{
-		if ( flags[ i ] != flags[ j ] )
-		{
-			flags[ i ] = !flags[ i ];
-			flags[ j ] = !flags[ j ];
-		}
-		return flags;
 	}
 
 	/*
@@ -644,7 +545,5 @@ public class MetaViews
 //	public static < T > IntervalView< T > permuteCoordinatesInverse(
 //	public static < T > IntervalView< T > permuteCoordinateInverse(
 //	public static < A, B > RandomAccessible< Pair< A, B > > pair( final RandomAccessible< A > sourceA, final RandomAccessible< B > sourceB )
-
-
 
 }
