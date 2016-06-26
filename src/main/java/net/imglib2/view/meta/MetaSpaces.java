@@ -1,8 +1,7 @@
 package net.imglib2.view.meta;
 
-import net.imglib2.Interval;
-import net.imglib2.RandomAccess;
-import net.imglib2.RandomAccessible;
+import java.util.HashMap;
+
 import net.imglib2.transform.integer.Mixed;
 
 
@@ -10,33 +9,58 @@ public class MetaSpaces
 {
 
 	// one item (maybe identified by Class< T >)
-	interface MetaObject< T >
-	{
-		public RandomAccessible< T > getValues();
+//	interface MetaObject< T >
+//	{
+//		public RandomAccessible< T > getValues();
+//
+//		public OrderedAxisSet getVariesWithAxes();
+//	}
 
-		public OrderedAxisSet getVariesWithAxes();
+	public interface MetaObjectKey< O >
+	{
 	}
 
-	// all items with same AttachedToAxes
-	public interface MetaObjectSet
+	// all items with same {@link #getAttachedToAxes()}
+	public interface MetaObjectSet< T >
 	{
-		public < T > MetaObject< T > getMetaObject( final Class< T > type );
+		public < O extends T > O getMetaObject( final MetaObjectKey< O > key );
+
+		public OrderedAxisSet getAttachedToAxes();
 	}
 
-	public static class MetaObjectSetImp implements MetaObjectSet
+	public static class MetaObjectHashSet< T > implements MetaObjectSet< T >
 	{
-		@Override
-		public < T > MetaObject< T > getMetaObject( final Class< T > type )
+		private final OrderedAxisSet attachedToAxes;
+
+		private final HashMap< MetaObjectKey< ? extends T >, T > objects;
+
+		public MetaObjectHashSet( final OrderedAxisSet attachedToAxes )
 		{
+			this.attachedToAxes = attachedToAxes;
+			this.objects = new HashMap<>();
+		}
+
+		@Override
+		public < O extends T > O getMetaObject( final MetaObjectKey< O > key )
+		{
+			// TODO Auto-generated method stub
 			return null;
+		}
+
+		@Override
+		public OrderedAxisSet getAttachedToAxes()
+		{
+			return attachedToAxes;
 		}
 	}
 
-	public static class MetaObjectSetMixedTransformView implements MetaObjectSet
+	public static class MetaObjectSetMixedTransformView< T > implements MetaObjectSet< T >
 	{
 		private final MetaObjectSet source;
 
 		private final Mixed transformToSource;
+
+		private OrderedAxisSet attachedToAxes;
 
 		MetaObjectSetMixedTransformView( final MetaObjectSet source, final Mixed transformToSource )
 		{
@@ -46,60 +70,20 @@ public class MetaSpaces
 		}
 
 		@Override
-		public < T > MetaObject< T > getMetaObject( final Class< T > type )
+		public < O extends T > O getMetaObject( final MetaObjectKey< O > key )
 		{
-			return null;
-		}
-	}
-
-	public interface MetaSpace extends RandomAccessible< MetaObjectSet >
-	{
-//		public MetaObjectSet getAt( final OrderedAxisSet attachedToAxes );
-	}
-
-	public static class MetaSpaceImp extends MetaSpaceContainer< MetaObjectSet > implements MetaSpace
-	{
-		public MetaSpaceImp( final int numDimensions )
-		{
-			super( numDimensions, () -> new MetaObjectSetImp() );
-		}
-	}
-
-	/**
-	 *
-	 */
-
-	static class MetaSpaceMixedTransformView implements MetaSpace
-	{
-		private final int n;
-
-		private final MetaSpace source;
-
-		private final Mixed transformToSource;
-
-		MetaSpaceMixedTransformView( final MetaSpace source, final Mixed transformToSource )
-		{
-			n = transformToSource.numSourceDimensions();
-			this.source = source;
-			this.transformToSource = transformToSource;
-		}
-
-		@Override
-		public RandomAccess< MetaObjectSet > randomAccess()
-		{
+			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
-		public RandomAccess< MetaObjectSet > randomAccess( final Interval interval )
+		public OrderedAxisSet getAttachedToAxes()
 		{
-			return null;
-		}
-
-		@Override
-		public int numDimensions()
-		{
-			return n;
+			if ( attachedToAxes == null )
+			{
+				attachedToAxes = source.getAttachedToAxes()
+			}
+			return attachedToAxes;
 		}
 	}
 
@@ -121,30 +105,6 @@ public class MetaSpaces
 	}
 }
 
-
-
-//static class MetaSpaceArray implements MetaSpace
-//{
-//	private final int n;
-//
-//	private final ArrayList< MetaObjectSet > objectSets;
-//
-//	public MetaSpaceArray( final int numDimensions )
-//	{
-//		n = numDimensions;
-//
-//		final int numElements = 2 << n;
-//		objectSets = new ArrayList<>( numElements );
-//		for ( int i = 0; i < numElements; ++i )
-//			objectSets.add( null );
-//	}
-//
-//	@Override
-//	public MetaObjectSet getAt( final OrderedAxisSet attachedToAxes )
-//	{
-//		return objectSets.get( positionToIndex( attachedToAxes ) );
-//	}
-//
 //	private int positionToIndex( final OrderedAxisSet position )
 //	{
 //		int i = 0;
@@ -153,4 +113,3 @@ public class MetaSpaces
 //			i += 2 << iterator.next();
 //		return i;
 //	}
-//}
