@@ -124,6 +124,38 @@ public class OrderedAxisSet implements Localizable, Positionable
 		return array;
 	}
 
+	public void setPosition( final OrderedAxisSet position )
+	{
+		System.arraycopy( position.flags, 0, flags, 0, n );
+		size = position.size;
+	}
+
+	public void localize( final OrderedAxisSet position )
+	{
+		System.arraycopy( flags, 0, position.flags, 0, n );
+		position.size = size;
+	}
+
+	public void setPosition( final boolean[] position )
+	{
+		System.arraycopy( position, 0, flags, 0, n );
+		size = 0;
+		for ( int d = 0; d < n; ++d )
+			if ( flags[ d ] )
+				++size;
+	}
+
+	public void localize( final boolean[] position )
+	{
+		System.arraycopy( flags, 0, position, 0, n );
+	}
+
+	public void clear()
+	{
+		Arrays.fill( flags, false );
+		size = 0;
+	}
+
     @Override
 	public String toString() {
         final StringBuilder sb = new StringBuilder( "[" );
@@ -223,27 +255,31 @@ public class OrderedAxisSet implements Localizable, Positionable
 	@Override
 	public void fwd( final int d )
 	{
-		flags[ d ] = true;
+		add( d );
 	}
 
 	@Override
 	public void bck( final int d )
 	{
-		flags[ d ] = false;
+		remove( d );
 	}
 
 	@Override
 	public void move( final int distance, final int d )
 	{
-		if ( distance != 0 )
-			flags[ d ] = distance > 0;
+		if ( distance > 0 )
+			add( d );
+		else if ( distance < 0 )
+			remove( d );
 	}
 
 	@Override
 	public void move( final long distance, final int d )
 	{
-		if ( distance != 0 )
-			flags[ d ] = distance > 0;
+		if ( distance > 0 )
+			add( d );
+		else if ( distance < 0 )
+			remove( d );
 	}
 
 	@Override
@@ -291,12 +327,18 @@ public class OrderedAxisSet implements Localizable, Positionable
 	@Override
 	public void setPosition( final int position, final int d )
 	{
-		flags[ d ] = position > 0;
+		if ( position > 0 )
+			add( d );
+		else
+			remove( d );
 	}
 
 	@Override
 	public void setPosition( final long position, final int d )
 	{
-		flags[ d ] = position > 0;
+		if ( position > 0 )
+			add( d );
+		else
+			remove( d );
 	}
 }

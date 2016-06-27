@@ -63,7 +63,7 @@ public class AxisBimap
 		{
 			final int db = a2b[ da ];
 			if ( db >= 0 )
-				b2a[ da ] = da;
+				b2a[ db ] = da;
 		}
 		return b2a;
 	}
