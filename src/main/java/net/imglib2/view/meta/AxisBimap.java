@@ -54,6 +54,34 @@ public class AxisBimap
 		return new AxisBimap( inverseMapping( targetToSource, numSourceDimensions ), targetToSource );
 	}
 
+	public OrderedAxisSet transformToTarget( final OrderedAxisSet source )
+	{
+		final OrderedAxisSet axisSet = new OrderedAxisSet( numTargetDimensions() );
+		for ( int d = 0; d < targetToSource.length; ++d )
+			if ( targetToSource[ d ] >= 0 && source.contains( targetToSource[ d ] ) )
+				axisSet.add( d );
+		return axisSet;
+	}
+
+	public OrderedAxisSet transformToSource( final OrderedAxisSet target )
+	{
+		final OrderedAxisSet axisSet = new OrderedAxisSet( numSourceDimensions() );
+		for ( int d = 0; d < sourceToTarget.length; ++d )
+			if ( sourceToTarget[ d ] >= 0 && target.contains( sourceToTarget[ d ] ) )
+				axisSet.add( d );
+		return axisSet;
+	}
+
+	public int numSourceDimensions()
+	{
+		return sourceToTarget.length;
+	}
+
+	public int numTargetDimensions()
+	{
+		return targetToSource.length;
+	}
+
 	private static int[] inverseMapping( final int[] a2b, final int nb )
 	{
 		final int na = a2b.length;

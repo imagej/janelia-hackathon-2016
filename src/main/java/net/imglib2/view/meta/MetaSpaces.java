@@ -81,28 +81,13 @@ public class MetaSpaces
 		{
 			if ( attachedToAxes == null )
 			{
-				attachedToAxes = source.getAttachedToAxes()
+				attachedToAxes = source.getAttachedToAxes();
 			}
 			return attachedToAxes;
 		}
 	}
 
 
-
-	static void stuff()
-	{
-
-
-
-
-
-
-
-
-
-
-
-	}
 }
 
 //	private int positionToIndex( final OrderedAxisSet position )

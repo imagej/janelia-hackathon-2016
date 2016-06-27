@@ -3,7 +3,7 @@ package net.imglib2.view.meta;
 import net.imglib2.AbstractEuclideanSpace;
 import net.imglib2.transform.integer.Mixed;
 
-public class MixedMetaSpaceView< T > extends AbstractEuclideanSpace implements MetaSpace< T >
+public class MetaSpaceView< T > extends AbstractEuclideanSpace implements MetaSpace< T >
 {
 	private final MetaSpace< T > source;
 
@@ -11,7 +11,7 @@ public class MixedMetaSpaceView< T > extends AbstractEuclideanSpace implements M
 
 	private final AxisBimap axisBimap;
 
-	public MixedMetaSpaceView( final MetaSpace< T > source, final Mixed transformToSource, final MetaSpace.Factory< T > factory )
+	public MetaSpaceView( final MetaSpace< T > source, final Mixed transformToSource, final MetaSpace.Factory< T > factory )
 	{
 		super( transformToSource.numSourceDimensions() );
 		this.source = source;
@@ -63,25 +63,25 @@ public class MixedMetaSpaceView< T > extends AbstractEuclideanSpace implements M
 		@Override
 		public T get( final OrderedAxisSet position )
 		{
-			return MixedMetaSpaceView.this.get( position, sourcePos );
+			return MetaSpaceView.this.get( position, sourcePos );
 		}
 
 		@Override
 		public T getOrCreate( final OrderedAxisSet position )
 		{
-			return MixedMetaSpaceView.this.getOrCreate( position, sourcePos );
+			return MetaSpaceView.this.getOrCreate( position, sourcePos );
 		}
 
 		@Override
 		public MetaSpace< T > access()
 		{
-			return MixedMetaSpaceView.this.access();
+			return MetaSpaceView.this.access();
 		}
 
 		@Override
 		public int numDimensions()
 		{
-			return MixedMetaSpaceView.this.numDimensions();
+			return MetaSpaceView.this.numDimensions();
 		}
 
 	}

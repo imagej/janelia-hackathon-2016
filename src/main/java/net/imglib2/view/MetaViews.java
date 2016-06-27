@@ -14,7 +14,9 @@ import net.imglib2.transform.integer.Mixed;
 import net.imglib2.transform.integer.MixedTransform;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.util.Util;
+import net.imglib2.view.meta.AxisBimap;
 import net.imglib2.view.meta.MixedTransforms;
+import net.imglib2.view.meta.OrderedAxisSet;
 
 public class MetaViews
 {
@@ -300,16 +302,15 @@ public class MetaViews
 		final int n = transformToSource.numSourceDimensions();
 		final int m = transformToSource.numTargetDimensions();
 
+		final OrderedAxisSet sourceAxisSet = new OrderedAxisSet( m );
+		sourceAxisSet.setPosition( item.attachedToAxes );
+
+		final AxisBimap bimap = MixedTransforms.getAxisBimap( transformToSource );
+		final OrderedAxisSet axisSet = bimap.transformToSource( sourceAxisSet );
+
+		final boolean remove = axisSet.size() != sourceAxisSet.size();
 		final boolean[] attachedToAxes = new boolean[ n ];
-		boolean remove = true;
-		for ( int d = 0; d < m; ++d )
-		{
-			if ( item.attachedToAxes[ d ] && !transformToSource.getComponentZero( d ) )
-			{
-				attachedToAxes[ transformToSource.getComponentMapping( d ) ] = true;
-				remove = false;
-			}
-		}
+		axisSet.localize( attachedToAxes );
 
 		if ( remove )
 			// not attached to any axis anymore
@@ -327,16 +328,15 @@ public class MetaViews
 		final boolean[] attachedToAxes;
 		if ( item.isAttachedToAxes() )
 		{
+			final OrderedAxisSet sourceAxisSet = new OrderedAxisSet( m );
+			sourceAxisSet.setPosition( item.attachedToAxes );
+
+			final AxisBimap bimap = MixedTransforms.getAxisBimap( transformToSource );
+			final OrderedAxisSet axisSet = bimap.transformToSource( sourceAxisSet );
+
+			final boolean remove = axisSet.size() != sourceAxisSet.size();
 			attachedToAxes = new boolean[ n ];
-			boolean remove = true;
-			for ( int d = 0; d < m; ++d )
-			{
-				if ( item.attachedToAxes[ d ] && !transformToSource.getComponentZero( d ) )
-				{
-					attachedToAxes[ transformToSource.getComponentMapping( d ) ] = true;
-					remove = false;
-				}
-			}
+			axisSet.localize( attachedToAxes );
 
 			if ( remove )
 				// not attached to any axis anymore
