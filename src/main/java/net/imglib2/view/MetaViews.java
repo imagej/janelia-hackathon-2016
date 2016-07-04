@@ -14,7 +14,7 @@ import net.imglib2.transform.integer.Mixed;
 import net.imglib2.transform.integer.MixedTransform;
 import net.imglib2.type.numeric.integer.IntType;
 import net.imglib2.util.Util;
-import net.imglib2.view.meta.AxisBimap;
+import net.imglib2.view.meta.InvertibleAxisMap;
 import net.imglib2.view.meta.MixedTransforms;
 import net.imglib2.view.meta.OrderedAxisSet;
 
@@ -305,7 +305,7 @@ public class MetaViews
 		final OrderedAxisSet sourceAxisSet = new OrderedAxisSet( m );
 		sourceAxisSet.setPosition( item.attachedToAxes );
 
-		final AxisBimap bimap = MixedTransforms.getAxisBimap( transformToSource );
+		final InvertibleAxisMap bimap = MixedTransforms.getAxisMap( transformToSource );
 		final OrderedAxisSet axisSet = bimap.transformToSource( sourceAxisSet );
 
 		final boolean remove = axisSet.size() != sourceAxisSet.size();
@@ -331,7 +331,7 @@ public class MetaViews
 			final OrderedAxisSet sourceAxisSet = new OrderedAxisSet( m );
 			sourceAxisSet.setPosition( item.attachedToAxes );
 
-			final AxisBimap bimap = MixedTransforms.getAxisBimap( transformToSource );
+			final InvertibleAxisMap bimap = MixedTransforms.getAxisMap( transformToSource );
 			final OrderedAxisSet axisSet = bimap.transformToSource( sourceAxisSet );
 
 			final boolean remove = axisSet.size() != sourceAxisSet.size();

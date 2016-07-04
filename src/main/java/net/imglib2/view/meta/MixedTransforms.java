@@ -43,20 +43,20 @@ public class MixedTransforms
 
 
 	/**
-	 * Create the {@link AxisBimap} from source space to target space of the
+	 * Create the {@link InvertibleAxisMap} from source space to target space of the
 	 * given {@link Mixed} transform.
 	 *
 	 * @param transform
 	 * @return axis mapping of {@code transform}.
 	 */
-	public static AxisBimap getAxisBimap( final Mixed transform )
+	public static InvertibleAxisMap getAxisMap( final Mixed transform )
 	{
 		final int ns = transform.numSourceDimensions();
 		final int nt = transform.numTargetDimensions();
 		final int[] targetToSource = new int[ nt ];
 		for  ( int d = 0; d < nt; ++d )
 			targetToSource[ d ] = transform.getComponentZero( d ) ? -1 : transform.getComponentMapping( d );
-		return AxisBimap.fromTargetToSourceMap( targetToSource, ns );
+		return InvertibleAxisMap.fromTargetToSourceMap( targetToSource, ns );
 	}
 
 

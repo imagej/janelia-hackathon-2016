@@ -9,14 +9,14 @@ public class MetaSpaceView< T > extends AbstractEuclideanSpace implements MetaSp
 
 	private final MetaSpace.Factory< T > factory;
 
-	private final AxisBimap axisBimap;
+	private final InvertibleAxisMap transformToSource;
 
 	public MetaSpaceView( final MetaSpace< T > source, final Mixed transformToSource, final MetaSpace.Factory< T > factory )
 	{
 		super( transformToSource.numSourceDimensions() );
 		this.source = source;
 		this.factory = factory;
-		axisBimap = MixedTransforms.getAxisBimap( transformToSource );
+		this.transformToSource = MixedTransforms.getAxisMap( transformToSource );
 	}
 
 	@Override
@@ -37,22 +37,15 @@ public class MetaSpaceView< T > extends AbstractEuclideanSpace implements MetaSp
 		return new Access();
 	}
 
-	private void computeSourcePos( final OrderedAxisSet position, final OrderedAxisSet sourcePos )
-	{
-		for ( int d = 0; d < n; ++d )
-			if ( position.contains( d ) )
-				sourcePos.fwd( axisBimap.getTargetAxisFor( d ) );
-	}
-
 	private T get( final OrderedAxisSet position, final OrderedAxisSet sourcePos  )
 	{
-		computeSourcePos( position, sourcePos );
+		transformToSource.applyInverse( sourcePos, position );
 		return source.get( sourcePos );
 	}
 
 	private T getOrCreate( final OrderedAxisSet position, final OrderedAxisSet sourcePos  )
 	{
-		computeSourcePos( position, sourcePos );
+		transformToSource.applyInverse( sourcePos, position );
 		return source.getOrCreate( sourcePos );
 	}
 
@@ -83,6 +76,5 @@ public class MetaSpaceView< T > extends AbstractEuclideanSpace implements MetaSp
 		{
 			return MetaSpaceView.this.numDimensions();
 		}
-
 	}
 }

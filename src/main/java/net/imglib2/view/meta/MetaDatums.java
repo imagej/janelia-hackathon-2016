@@ -42,13 +42,13 @@ public class MetaDatums
 	{
 		private final MetaDatum< T > source;
 
-		private final AxisBimap axisBimap;
+		private final InvertibleAxisMap axisBimap;
 
 		public MetaDatumView( final MetaDatum< T > source, final Mixed transformToSource )
 		{
 			super( transformToSource.numSourceDimensions() );
 			this.source = source;
-			this.axisBimap = MixedTransforms.getAxisBimap( transformToSource );
+			this.axisBimap = MixedTransforms.getAxisMap( transformToSource );
 		}
 
 		@Override
