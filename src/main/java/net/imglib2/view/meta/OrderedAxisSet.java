@@ -6,6 +6,22 @@ import gnu.trove.iterator.TIntIterator;
 import net.imglib2.Localizable;
 import net.imglib2.Positionable;
 
+/**
+ * A subset of axes of <em>n</em>-dimensional space ({@link #numDimensions()}).
+ * It can be accessed via various interfaces:
+ * <p>
+ * It can be used as an ordered set of {@code int}s (axis indices, iteration is
+ * always from smallest to larges).
+ * <p>
+ * It can alse be used as a <em>n</em>-dimensional {@link Localizable}/
+ * {@link Positionable}, where coordinate {@code 1} along dimension {@code d}
+ * means that the axis with index {@code d} is in the set, and coordinate
+ * {@code 0} means that the axis is not in the set.
+ * <p>
+ * It can also be positioned and localized with a {@code boolean[]} array.
+ *
+ * @author Tobias Pietzsch &lt;tobias.pietzsch@gmail.com&gt;
+ */
 public class OrderedAxisSet implements Localizable, Positionable
 {
 	private final int n;
