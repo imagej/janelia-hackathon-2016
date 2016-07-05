@@ -19,4 +19,7 @@ public interface MetaSpace< T > extends EuclideanSpace
 
 	// create thread-safe independent access
 	public MetaSpace< T > access();
+
+	// for creating Ts
+	public Factory< T > factory();
 }

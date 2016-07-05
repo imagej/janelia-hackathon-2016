@@ -41,4 +41,10 @@ public class MetaSpaceContainer< T > extends AbstractEuclideanSpace implements M
 	{
 		return this;
 	}
+
+	@Override
+	public MetaSpace.Factory< T > factory()
+	{
+		return factory;
+	}
 }
