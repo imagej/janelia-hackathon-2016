@@ -16,15 +16,12 @@ public class IjMetaGenerics
 		ViewFactory< S > viewFactory();
 	}
 
-	static class SpaceView< S extends Space< S, T >, T > implements Space< S, T >
+	static abstract class SpaceView< S extends Space< S, T >, T > implements Space< S, T >
 	{
-		private final ViewFactory< S > viewFactory;
-
 		private final S source;
 
-		public SpaceView( final ViewFactory< S > viewFactory, final S source )
+		public SpaceView( final S source )
 		{
-			this.viewFactory = viewFactory;
 			this.source = source;
 		}
 
@@ -60,23 +57,14 @@ public class IjMetaGenerics
 				return SpaceView.this.viewFactory();
 			}
 		}
-
-		@Override
-		public ViewFactory< S > viewFactory()
-		{
-			return viewFactory;
-		}
 	}
 
 	static abstract class SpaceContainer< S extends Space< S, T >, T > implements Space< S, T >
 	{
 		private final T type;
 
-		private final ViewFactory< S > viewFactory;
-
-		public SpaceContainer( final ViewFactory< S > viewFactory, final T type )
+		public SpaceContainer( final T type )
 		{
-			this.viewFactory = viewFactory;
 			this.type = type;
 		}
 
@@ -90,12 +78,6 @@ public class IjMetaGenerics
 		public Space< S, T > access()
 		{
 			return this;
-		}
-
-		@Override
-		public ViewFactory< S > viewFactory()
-		{
-			return viewFactory;
 		}
 	}
 
@@ -120,7 +102,13 @@ public class IjMetaGenerics
 	{
 		public IjSpaceView( final IjSpace source )
 		{
-			super( IjSpaceViewFactory.instance, source );
+			super( source );
+		}
+
+		@Override
+		public ViewFactory< IjSpace > viewFactory()
+		{
+			return IjSpaceViewFactory.instance;
 		}
 	}
 
@@ -128,7 +116,13 @@ public class IjMetaGenerics
 	{
 		public IjSpaceContainer( final String type )
 		{
-			super( IjSpaceViewFactory.instance, type );
+			super( type );
+		}
+
+		@Override
+		public ViewFactory< IjSpace > viewFactory()
+		{
+			return IjSpaceViewFactory.instance;
 		}
 	}
 
