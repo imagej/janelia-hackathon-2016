@@ -1,12 +1,15 @@
 package net.imglib2.view.meta;
 
 import net.imglib2.EuclideanSpace;
+import net.imglib2.transform.integer.Mixed;
 
 public interface MetaSpace< T > extends EuclideanSpace
 {
 	public static interface Factory< T >
 	{
 		public T create();
+
+		public T createView( T source, final Mixed transformToSource );
 	}
 
 	public T get( final OrderedAxisSet position );

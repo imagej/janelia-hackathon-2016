@@ -37,6 +37,13 @@ public class MetaSpaceView< T > extends AbstractEuclideanSpace implements MetaSp
 		return new Access();
 	}
 
+
+
+	/*
+	 * TODO: the returned T needs to be wrapped in a view.
+	 * different Factory<T>?
+	 */
+
 	private T get( final OrderedAxisSet position, final OrderedAxisSet sourcePos  )
 	{
 		transformToSource.applyInverse( sourcePos, position );
@@ -48,6 +55,9 @@ public class MetaSpaceView< T > extends AbstractEuclideanSpace implements MetaSp
 		transformToSource.applyInverse( sourcePos, position );
 		return source.getOrCreate( sourcePos );
 	}
+
+
+
 
 	class Access implements MetaSpace< T >
 	{
