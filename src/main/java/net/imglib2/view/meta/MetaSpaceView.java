@@ -9,14 +9,17 @@ public class MetaSpaceView< T > extends AbstractEuclideanSpace implements MetaSp
 
 	private final MetaSpace.Factory< T > factory;
 
-	private final InvertibleAxisMap transformToSource;
+	private final Mixed transformToSource;
+
+	private final InvertibleAxisMap axisMap;
 
 	public MetaSpaceView( final MetaSpace< T > source, final Mixed transformToSource, final MetaSpace.Factory< T > factory )
 	{
 		super( transformToSource.numSourceDimensions() );
 		this.source = source;
+		this.transformToSource = transformToSource;
 		this.factory = factory;
-		this.transformToSource = MixedTransforms.getAxisMap( transformToSource );
+		this.axisMap = MixedTransforms.getAxisMap( transformToSource );
 	}
 
 	@Override
@@ -37,27 +40,17 @@ public class MetaSpaceView< T > extends AbstractEuclideanSpace implements MetaSp
 		return new Access();
 	}
 
-
-
-	/*
-	 * TODO: the returned T needs to be wrapped in a view.
-	 * different Factory<T>?
-	 */
-
 	private T get( final OrderedAxisSet position, final OrderedAxisSet sourcePos  )
 	{
-		transformToSource.applyInverse( sourcePos, position );
-		return source.get( sourcePos );
+		axisMap.applyInverse( sourcePos, position );
+		return factory.createView( source.get( sourcePos ), transformToSource );
 	}
 
 	private T getOrCreate( final OrderedAxisSet position, final OrderedAxisSet sourcePos  )
 	{
-		transformToSource.applyInverse( sourcePos, position );
-		return source.getOrCreate( sourcePos );
+		axisMap.applyInverse( sourcePos, position );
+		return factory.createView( source.getOrCreate( sourcePos ), transformToSource );
 	}
-
-
-
 
 	class Access implements MetaSpace< T >
 	{

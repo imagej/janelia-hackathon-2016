@@ -7,7 +7,7 @@ public interface MetaSpace< T > extends EuclideanSpace
 {
 	public static interface Factory< T >
 	{
-		public T create();
+		public T create( final OrderedAxisSet position );
 
 		public T createView( T source, final Mixed transformToSource );
 	}

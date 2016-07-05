@@ -30,7 +30,7 @@ public class MetaSpaceContainer< T > extends AbstractEuclideanSpace implements M
 		T t = map.get( position );
 		if ( t == null )
 		{
-			t = factory.create();
+			t = factory.create( position );
 			map.put( position, t );
 		}
 		return t;
