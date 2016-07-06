@@ -1,5 +1,7 @@
 package net.imglib2.view.ijmeta;
 
+import java.util.Iterator;
+
 import net.imglib2.AbstractEuclideanSpace;
 import net.imglib2.RandomAccessible;
 import net.imglib2.transform.integer.Mixed;
@@ -64,5 +66,44 @@ public class MetaDataSetView extends AbstractEuclideanSpace implements MetaDataS
 	public < T > void put( final MetaDatumKey< T > key, final RandomAccessible< T > data, final OrderedAxisSet variesWithAxes )
 	{
 		throw new UnsupportedOperationException( MetaDataSet.class.getSimpleName() + " is read-only (currently)" );
+	}
+
+	@Override
+	public boolean containsKey( final MetaDatumKey< ? > key )
+	{
+		return source.containsKey( key );
+	}
+
+	@Override
+	public Iterator< MetaDatum< ? > > iterator()
+	{
+		return new Iterator< MetaDatum< ? > >()
+		{
+			private final Iterator< MetaDatum< ? > > sourceIt = source.iterator();
+
+			@Override
+			public boolean hasNext()
+			{
+				return sourceIt.hasNext();
+			}
+
+			@Override
+			public MetaDatum< ? > next()
+			{
+				return getMetaDatum( sourceIt.next().getKey() );
+			}
+		};
+	}
+
+	@Override
+	public int size()
+	{
+		return source.size();
+	}
+
+	@Override
+	public boolean isEmpty()
+	{
+		return source.isEmpty();
 	}
 }

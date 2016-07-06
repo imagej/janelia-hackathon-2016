@@ -1,6 +1,7 @@
 package net.imglib2.view.ijmeta;
 
 import java.util.HashMap;
+import java.util.Iterator;
 
 import net.imglib2.AbstractEuclideanSpace;
 import net.imglib2.RandomAccessible;
@@ -44,4 +45,27 @@ public class MetaDataSetContainer extends AbstractEuclideanSpace implements Meta
 		datums.put( key, new MetaDatumContainer<>( key, data, variesWithAxes, attachedToAxes ) );
 	}
 
+	@Override
+	public boolean containsKey( final MetaDatumKey< ? > key )
+	{
+		return datums.containsKey( key );
+	}
+
+	@Override
+	public Iterator< MetaDatum< ? > > iterator()
+	{
+		return datums.values().iterator();
+	}
+
+	@Override
+	public int size()
+	{
+		return datums.size();
+	}
+
+	@Override
+	public boolean isEmpty()
+	{
+		return datums.isEmpty();
+	}
 }
