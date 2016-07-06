@@ -26,6 +26,10 @@ public abstract class MetaSpaceView< S extends MetaSpace< S, T >, T >
 		this.elements = new HashMap<>();
 	}
 
+	/**
+	 * TODO: should created views really be cached?
+	 */
+
 	@Override
 	public T getIfExists( final OrderedAxisSet position )
 	{

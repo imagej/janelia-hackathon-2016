@@ -36,6 +36,9 @@ public class MetaDataSetView extends AbstractEuclideanSpace implements MetaDataS
 		this.attachedToAxes = attachedToAxes;
 	}
 
+	/**
+	 * TODO: should created MetaDatumViews be cached?
+	 */
 	@Override
 	public < T > MetaDatum< T > getMetaDatum( final MetaDatumKey< T > key )
 	{
