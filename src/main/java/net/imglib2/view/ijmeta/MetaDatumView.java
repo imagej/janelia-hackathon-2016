@@ -87,10 +87,10 @@ public class MetaDatumView< T > extends AbstractEuclideanSpace implements MetaDa
 		sb.append( "\" attached to " );
 		sb.append( getAttachedToAxes() );
 		if ( getVariesWithAxes().isEmpty() )
-			sb.append( " non-varying" );
+			sb.append( ", non-varying" );
 		else
 		{
-			sb.append( " varying with " );
+			sb.append( ", varying with " );
 			sb.append( getVariesWithAxes() );
 		}
 		return sb.toString();

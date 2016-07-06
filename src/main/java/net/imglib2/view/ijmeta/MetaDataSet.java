@@ -2,9 +2,10 @@ package net.imglib2.view.ijmeta;
 
 import net.imglib2.EuclideanSpace;
 import net.imglib2.RandomAccessible;
+import net.imglib2.view.meta.HasAttachedAxes;
 import net.imglib2.view.meta.OrderedAxisSet;
 
-public interface MetaDataSet extends EuclideanSpace, Iterable< MetaDatum< ? > >
+public interface MetaDataSet extends EuclideanSpace, Iterable< MetaDatum< ? > >, HasAttachedAxes
 {
 	public < T > MetaDatum< T > getMetaDatum( MetaDatumKey< T > key );
 
@@ -17,6 +18,4 @@ public interface MetaDataSet extends EuclideanSpace, Iterable< MetaDatum< ? > >
 	public int size();
 
 	public boolean isEmpty();
-
-	public OrderedAxisSet getAttachedToAxes();
 }

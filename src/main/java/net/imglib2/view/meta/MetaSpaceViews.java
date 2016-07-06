@@ -39,11 +39,11 @@ public class MetaSpaceViews
 		if ( source instanceof MetaSpaceView )
 		{
 			final MetaSpaceView< S, T > sourceView = ( ( MetaSpaceView< S, T > ) source );
-			final S s = sourceView.getSource();
 			final MixedTransform t = new MixedTransform( transformToSource.numSourceDimensions(), transformToSource.numTargetDimensions() );
 			t.set( transformToSource );
-			t.concatenate( sourceView.getTransformToSource() );
-			return source.viewFactory().createView( s, t );
+			return source.viewFactory().createView(
+					sourceView.getSource(),
+					t.concatenate( sourceView.getTransformToSource() ) );
 		}
 		else
 			return source.viewFactory().createView( source, transformToSource );

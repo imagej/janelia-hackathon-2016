@@ -8,7 +8,7 @@ public abstract class MetaSpaceContainer< S extends MetaSpace< S, T >, T >
 		extends AbstractEuclideanSpace
 		implements MetaSpace< S, T >
 {
-	private final HashMap< OrderedAxisSet, T > elements;
+	final HashMap< OrderedAxisSet, T > elements;
 
 	public MetaSpaceContainer( final int numDimensions )
 	{

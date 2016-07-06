@@ -2,7 +2,7 @@ package net.imglib2.view.ijmeta;
 
 import net.imglib2.AbstractEuclideanSpace;
 import net.imglib2.RandomAccessible;
-import net.imglib2.view.meta.MetaViewsUtils;
+import net.imglib2.view.meta.MetaSpaceUtils;
 import net.imglib2.view.meta.OrderedAxisSet;
 
 public class MetaDatumContainer< T > extends AbstractEuclideanSpace implements MetaDatum< T >
@@ -23,7 +23,7 @@ public class MetaDatumContainer< T > extends AbstractEuclideanSpace implements M
 		super( attachedToAxes.numDimensions() );
 		this.key = key;
 		this.value = data;
-		this.values = MetaViewsUtils.wrapAsRandomAccessible( data, n );
+		this.values = MetaSpaceUtils.wrapAsRandomAccessible( data, n );
 		this.variesWithAxes = new OrderedAxisSet( n );
 		this.attachedToAxes = attachedToAxes;
 	}
@@ -34,7 +34,7 @@ public class MetaDatumContainer< T > extends AbstractEuclideanSpace implements M
 		super( attachedToAxes.numDimensions() );
 		this.key = key;
 		this.value = null;
-		this.values = MetaViewsUtils.addNonVaryingDimensions( data, variesWithAxes );
+		this.values = MetaSpaceUtils.addNonVaryingDimensions( data, variesWithAxes );
 		this.variesWithAxes = variesWithAxes;
 		this.attachedToAxes = attachedToAxes;
 	}
@@ -77,10 +77,10 @@ public class MetaDatumContainer< T > extends AbstractEuclideanSpace implements M
 		sb.append( "\" attached to " );
 		sb.append( getAttachedToAxes() );
 		if ( getVariesWithAxes().isEmpty() )
-			sb.append( " non-varying" );
+			sb.append( ", non-varying" );
 		else
 		{
-			sb.append( " varying with " );
+			sb.append( ", varying with " );
 			sb.append( getVariesWithAxes() );
 		}
 		return sb.toString();

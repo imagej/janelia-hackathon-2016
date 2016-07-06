@@ -32,4 +32,10 @@ public class MetaDatumKey< T >
 		else
 			return false;
 	}
+
+	@Override
+	public String toString()
+	{
+		return name + " : " + klass.getSimpleName();
+	}
 }

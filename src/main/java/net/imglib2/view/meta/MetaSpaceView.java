@@ -13,7 +13,7 @@ public abstract class MetaSpaceView< S extends MetaSpace< S, T >, T >
 
 	private final Mixed transformToSource;
 
-	private final InvertibleAxisMap axisMap;
+	final InvertibleAxisMap axisMap;
 
 	private final HashMap< OrderedAxisSet, T > elements;
 
@@ -61,13 +61,13 @@ public abstract class MetaSpaceView< S extends MetaSpace< S, T >, T >
 
 	private T getFromSource( final OrderedAxisSet position, final OrderedAxisSet sourcePos  )
 	{
-		axisMap.applyInverse( sourcePos, position );
+		axisMap.apply( position, sourcePos );
 		return source.getIfExists( sourcePos );
 	}
 
 	private T getOrCreateFromSource( final OrderedAxisSet position, final OrderedAxisSet sourcePos  )
 	{
-		axisMap.applyInverse( sourcePos, position );
+		axisMap.apply( position, sourcePos );
 		return source.get( sourcePos );
 	}
 
