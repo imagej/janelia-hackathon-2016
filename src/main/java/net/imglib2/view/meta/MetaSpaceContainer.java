@@ -4,47 +4,39 @@ import java.util.HashMap;
 
 import net.imglib2.AbstractEuclideanSpace;
 
-// TODO: MetaSpace could default implement Interval methods.
-public class MetaSpaceContainer< T > extends AbstractEuclideanSpace implements MetaSpace< T >
+public abstract class MetaSpaceContainer< S extends MetaSpace< S, T >, T >
+		extends AbstractEuclideanSpace
+		implements MetaSpace< S, T >
 {
-	private final HashMap< OrderedAxisSet, T > map;
+	private final HashMap< OrderedAxisSet, T > elements;
 
-	private final MetaSpace.Factory< T > factory;
-
-	public MetaSpaceContainer( final int numDimensions, final MetaSpace.Factory< T > factory )
+	public MetaSpaceContainer( final int numDimensions )
 	{
 		super( numDimensions );
-		map = new HashMap< >();
-		this.factory = factory;
+		elements = new HashMap<>();
+	}
+
+	@Override
+	public T getIfExists( final OrderedAxisSet position )
+	{
+		return elements.get( position );
 	}
 
 	@Override
 	public T get( final OrderedAxisSet position )
 	{
-		return map.get( position );
-	}
-
-	@Override
-	public T getOrCreate( final OrderedAxisSet position )
-	{
-		T t = map.get( position );
+		T t = elements.get( position );
 		if ( t == null )
 		{
-			t = factory.create( position );
-			map.put( position, t );
+			t = elementFactory().create( position );
+			elements.put( position, t );
 		}
 		return t;
 	}
 
-	@Override
-	public MetaSpace< T > access()
-	{
-		return this;
-	}
-
-	@Override
-	public MetaSpace.Factory< T > factory()
-	{
-		return factory;
-	}
+//	@Override
+//	public S access()
+//	{
+//		return ( S ) this;
+//	}
 }

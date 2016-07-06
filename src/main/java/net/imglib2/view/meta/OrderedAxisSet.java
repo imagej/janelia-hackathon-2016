@@ -30,14 +30,64 @@ public class OrderedAxisSet implements Localizable, Positionable
 
 	private int size;
 
+	private void recomputeSize()
+	{
+		size = 0;
+		for ( int d = 0; d < n; ++d )
+			if ( flags[ d ] )
+				++size;
+	}
+
 	/**
-	 * Should numDimensions rather be like capacity and able to grow?
+	 * Create empty OrderedAxisSet.
+	 *
+	 * @param numDimensions
+	 *            number of dimensions of the space
 	 */
 	public OrderedAxisSet( final int numDimensions )
 	{
 		n = numDimensions;
 		flags = new boolean[ numDimensions ];
 		size = 0;
+	}
+
+	/**
+	 * Protected constructor that can re-use the passed flags array.
+	 *
+	 * @param flags
+	 *            array used to store the flags.
+	 * @param copy
+	 *            flag indicating whether flags array should be duplicated.
+	 */
+	protected OrderedAxisSet( final boolean[] flags, final boolean copy )
+	{
+		n = flags.length;
+		this.flags = copy ? flags.clone() : flags;
+		recomputeSize();
+	}
+
+	/**
+	 * Create a point at a definite location in a space of the dimensionality of
+	 * the position.
+	 *
+	 * @param position
+	 *            the initial position. The length of the array determines the
+	 *            dimensionality of the space.
+	 */
+	public OrderedAxisSet( final boolean... flags )
+	{
+		this( flags, true );
+	}
+
+	/**
+	 * Create an OrderedAxisSet that is stored in the provided flags array.
+	 *
+	 * @param flags
+	 *            array to use for storing the flags.
+	 */
+	public static OrderedAxisSet wrap( final boolean[] flags )
+	{
+		return new OrderedAxisSet( flags, false );
 	}
 
 	@Override
@@ -155,10 +205,7 @@ public class OrderedAxisSet implements Localizable, Positionable
 	public void setPosition( final boolean[] position )
 	{
 		System.arraycopy( position, 0, flags, 0, n );
-		size = 0;
-		for ( int d = 0; d < n; ++d )
-			if ( flags[ d ] )
-				++size;
+		recomputeSize();
 	}
 
 	public void localize( final boolean[] position )

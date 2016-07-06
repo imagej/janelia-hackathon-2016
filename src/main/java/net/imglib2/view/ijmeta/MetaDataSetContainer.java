@@ -3,6 +3,7 @@ package net.imglib2.view.ijmeta;
 import java.util.HashMap;
 
 import net.imglib2.AbstractEuclideanSpace;
+import net.imglib2.RandomAccessible;
 import net.imglib2.view.meta.OrderedAxisSet;
 
 public class MetaDataSetContainer extends AbstractEuclideanSpace implements MetaDataSet
@@ -30,4 +31,17 @@ public class MetaDataSetContainer extends AbstractEuclideanSpace implements Meta
 	{
 		return attachedToAxes;
 	}
+
+	@Override
+	public < T > void put( final MetaDatumKey< T > key, final T data )
+	{
+		datums.put( key, new MetaDatumContainer<>( key, data, attachedToAxes ) );
+	}
+
+	@Override
+	public < T > void put( final MetaDatumKey< T > key, final RandomAccessible< T > data, final OrderedAxisSet variesWithAxes )
+	{
+		datums.put( key, new MetaDatumContainer<>( key, data, variesWithAxes, attachedToAxes ) );
+	}
+
 }

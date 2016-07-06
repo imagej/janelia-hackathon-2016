@@ -11,37 +11,41 @@ import net.imglib2.view.Views;
  */
 public class MetaSpaceViews
 {
-	public static < T > MetaSpace< T > rotate( final MetaSpace< T > source, final int fromAxis, final int toAxis )
+	public static < S extends MetaSpace< S, T >, T >
+			S rotate( final S source, final int fromAxis, final int toAxis )
 	{
 		if ( fromAxis == toAxis )
 			return source;
 		return mixedTransform( source, MixedTransforms.getRotationTransform( fromAxis, toAxis, source.numDimensions() ) );
 	}
 
-	public static < T > MetaSpace< T > permute( final MetaSpace< T > source, final int fromAxis, final int toAxis )
+	public static < S extends MetaSpace< S, T >, T >
+			S permute( final S source, final int fromAxis, final int toAxis )
 	{
 		if ( fromAxis == toAxis )
 			return source;
 		return mixedTransform( source, MixedTransforms.getPermuteTransform( fromAxis, toAxis, source.numDimensions() ) );
 	}
 
-	public static < T > MetaSpace< T > hyperSlice( final MetaSpace< T > source, final int d, final long pos )
+	public static < S extends MetaSpace< S, T >, T >
+			S hyperSlice( final S source, final int d, final long pos )
 	{
 		return mixedTransform( source, MixedTransforms.getHyperSliceTransform( d, pos, source.numDimensions() ) );
 	}
 
-	public static < T > MetaSpace< T > mixedTransform( final MetaSpace< T > source, final Mixed transformToSource )
+	public static < S extends MetaSpace< S, T >, T >
+			S mixedTransform( final S source, final Mixed transformToSource )
 	{
 		if ( source instanceof MetaSpaceView )
 		{
-			final MetaSpaceView< T > sourceView = ( ( MetaSpaceView< T > ) source );
-			final MetaSpace< T > s = sourceView.getSource();
+			final MetaSpaceView< S, T > sourceView = ( ( MetaSpaceView< S, T > ) source );
+			final S s = sourceView.getSource();
 			final MixedTransform t = new MixedTransform( transformToSource.numSourceDimensions(), transformToSource.numTargetDimensions() );
 			t.set( transformToSource );
 			t.concatenate( sourceView.getTransformToSource() );
-			return new MetaSpaceView<>( s, t, source.factory() );
+			return source.viewFactory().createView( s, t );
 		}
 		else
-			return new MetaSpaceView<>( source, transformToSource, source.factory() );
+			return source.viewFactory().createView( source, transformToSource );
 	}
 }

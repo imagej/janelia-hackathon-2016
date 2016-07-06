@@ -76,8 +76,13 @@ public class MetaDatumContainer< T > extends AbstractEuclideanSpace implements M
 		sb.append( getKey() );
 		sb.append( "\" attached to " );
 		sb.append( getAttachedToAxes() );
-		sb.append( " varying with " );
-		sb.append( getVariesWithAxes() );
+		if ( getVariesWithAxes().isEmpty() )
+			sb.append( " non-varying" );
+		else
+		{
+			sb.append( " varying with " );
+			sb.append( getVariesWithAxes() );
+		}
 		return sb.toString();
 	}
 }

@@ -1,6 +1,7 @@
 package net.imglib2.view.ijmeta;
 
 import net.imglib2.AbstractEuclideanSpace;
+import net.imglib2.RandomAccessible;
 import net.imglib2.transform.integer.Mixed;
 import net.imglib2.view.meta.InvertibleAxisMap;
 import net.imglib2.view.meta.MixedTransforms;
@@ -48,5 +49,17 @@ public class MetaDataSetView extends AbstractEuclideanSpace implements MetaDataS
 	public OrderedAxisSet getAttachedToAxes()
 	{
 		return attachedToAxes;
+	}
+
+	@Override
+	public < T > void put( final MetaDatumKey< T > key, final T data )
+	{
+		throw new UnsupportedOperationException( MetaDataSet.class.getSimpleName() + " is read-only (currently)" );
+	}
+
+	@Override
+	public < T > void put( final MetaDatumKey< T > key, final RandomAccessible< T > data, final OrderedAxisSet variesWithAxes )
+	{
+		throw new UnsupportedOperationException( MetaDataSet.class.getSimpleName() + " is read-only (currently)" );
 	}
 }
