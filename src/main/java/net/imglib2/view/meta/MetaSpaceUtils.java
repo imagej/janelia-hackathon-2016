@@ -26,6 +26,15 @@ public class MetaSpaceUtils
 		return new MixedTransformView<>( new ZeroDimRandomAccessible<>( data ), t );
 	}
 
+	/**
+	 * Build an iterator of the values of a {@link MetaSpace}. Works for both
+	 * {@link MetaSpaceContainer}s and {@link MetaSpaceView}s. This requires
+	 * that the value type of the {@link MetaSpace} implements
+	 * {@link HasAttachedAxes}.
+	 *
+	 * @param space
+	 * @return iterator of values in the space.
+	 */
 	public static < S extends MetaSpace< S, T >, T extends HasAttachedAxes > Iterator< T > iterator( final S space )
 	{
 		if ( space instanceof MetaSpaceContainer )
