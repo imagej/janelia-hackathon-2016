@@ -22,6 +22,9 @@ import net.imglib2.Positionable;
  *
  * @author Tobias Pietzsch &lt;tobias.pietzsch@gmail.com&gt;
  */
+
+// TODO: rename to Axes
+// TODO: contructor numDims, axes...
 public class OrderedAxisSet implements Localizable, Positionable
 {
 	private final int n;

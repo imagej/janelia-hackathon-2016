@@ -24,6 +24,10 @@ public class IjMetaSpaceContainer extends MetaSpaceContainer< IjMetaSpace, MetaD
 		return IjMetaSpaceView.Factory.instance;
 	}
 
+	// TODO:
+	//	public < T > void put( final MetaDatumKey< T > key, final T data, final int axis )
+	//	public < T > void put( final MetaDatumKey< T > key, final T data )
+
 	public < T > void put( final MetaDatumKey< T > key, final T data, final OrderedAxisSet attachedToAxes )
 	{
 		get( attachedToAxes ).put( key, data );
