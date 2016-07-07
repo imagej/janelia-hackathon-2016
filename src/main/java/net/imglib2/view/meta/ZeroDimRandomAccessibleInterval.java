@@ -11,11 +11,11 @@ import net.imglib2.RealPositionable;
  * A 0-dimensional {@link RandomAccessibleInterval} wrapping a value of type
  * {@code T}.
  */
-public class ZeroDimRandomAccessible< T > implements RandomAccess< T >, RandomAccessibleInterval< T >
+public class ZeroDimRandomAccessibleInterval< T > implements RandomAccess< T >, RandomAccessibleInterval< T >
 {
 	private final T value;
 
-	public ZeroDimRandomAccessible( final T value )
+	public ZeroDimRandomAccessibleInterval( final T value )
 	{
 		this.value = value;
 	}
@@ -39,13 +39,13 @@ public class ZeroDimRandomAccessible< T > implements RandomAccess< T >, RandomAc
 	}
 
 	@Override
-	public ZeroDimRandomAccessible< T > copy()
+	public ZeroDimRandomAccessibleInterval< T > copy()
 	{
 		return this;
 	}
 
 	@Override
-	public ZeroDimRandomAccessible< T > copyRandomAccess()
+	public ZeroDimRandomAccessibleInterval< T > copyRandomAccess()
 	{
 		return this;
 	}

@@ -23,7 +23,7 @@ public class MetaSpaceUtils
 			final int numDimensions )
 	{
 		final MixedTransform t = new MixedTransform( numDimensions, 0 );
-		return new MixedTransformView<>( new ZeroDimRandomAccessible<>( data ), t );
+		return new MixedTransformView<>( new ZeroDimRandomAccessibleInterval<>( data ), t );
 	}
 
 	/**
