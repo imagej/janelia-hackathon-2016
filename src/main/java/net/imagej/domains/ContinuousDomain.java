@@ -9,7 +9,7 @@ import net.imglib2.RealRandomAccessible;
  * @author Stephan Saalfeld &lt;saalfelds@janelia.hhmi.org&gt;
  *
  */
-public class ContinuousDomain<A, T> implements Domain<A, T>, RealRandomAccessible<A> {
+public class ContinuousDomain<A, T> implements Domain, RealRandomAccessible<A> {
 	
 	/**
 	 * Get a flattened {@link RealRandomAccessible} that provides

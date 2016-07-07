@@ -1,6 +1,7 @@
 package net.imagej.usecase;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -18,13 +19,36 @@ import net.imglib2.view.Views;
 
 public class Registration
 {
+
+	public <T extends RealType<T>> List<RealRandomAccessible<T>>
+		hyperSliceView(final RandomAccessibleInterval<T> data, final int d,
+			final InterpolatorFactory<T, RandomAccessible<T>> interpolatorFactory,
+			final OutOfBoundsFactory<T, RandomAccessibleInterval<T>> oobFactory)
+	{
+
+		return new List<RealRandomAccessible<T>>() {
+			public RealRandomAccessible<T> get(int index) {
+				final RealRandomAccessible< T > slice =
+						Views.interpolate(
+							Views.extend(
+								Views.hyperSlice( data, d, index ), // ?
+								oobFactory ),
+							interpolatorFactory );
+				return slice;
+			}
+		};
+	}
+
 	public < T extends RealType< T > >
-			Map< Long, AffineGet > registerSlices( final RandomAccessibleInterval< T > data ) // assumes data is XYT or XYZT
+			Map< Long, AffineGet > registerSlices( final RandomAccessibleInterval< T > data ) // assumes data is CC...D
 	{
 		final InterpolatorFactory< T, RandomAccessible< T > > interpolatorFactory = new NLinearInterpolatorFactory<>(); // ?
 		final OutOfBoundsFactory< T, RandomAccessibleInterval< T > > oobFactory = new OutOfBoundsBorderFactory<>(); // ?
 
 		final int timeDimension = data.numDimensions() - 1; // ?
+
+		final List<RealRandomAccessible<T>> slices = hyperSliceView(data, timeDimension, interpolatorFactory, oobFactory);
+
 		final long timeMin = data.min( timeDimension );
 		final long timeMax = data.max( timeDimension );
 
@@ -35,12 +59,7 @@ public class Registration
 		final RandomAccessibleInterval< T > template = Views.hyperSlice( data, timeDimension, timeMin ); // ?
 		for ( long t = timeMin + 1; t <= timeMax; ++t )
 		{
-			final RealRandomAccessible< T > image =
-					Views.interpolate(
-						Views.extend(
-							Views.hyperSlice( data, timeDimension, t ), // ?
-							oobFactory ),
-						interpolatorFactory );
+			final RealRandomAccessible< T > image = slices.get(t);
 
 			final AffineGet transform = align( template, image );
 			transforms.put( t, transform );
