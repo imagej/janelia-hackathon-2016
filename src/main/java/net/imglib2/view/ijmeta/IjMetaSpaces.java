@@ -1,11 +1,18 @@
 package net.imglib2.view.ijmeta;
 
+import static net.imglib2.view.meta.MetaSpaceViews.hyperSlice;
+import static net.imglib2.view.meta.MetaSpaceViews.permute;
+
+import java.util.Arrays;
 import java.util.Iterator;
 
+import net.imglib2.RandomAccess;
 import net.imglib2.RandomAccessible;
 import net.imglib2.img.array.ArrayImgs;
+import net.imglib2.iterator.IntervalIterator;
 import net.imglib2.transform.integer.Mixed;
 import net.imglib2.type.numeric.integer.IntType;
+import net.imglib2.util.Util;
 import net.imglib2.view.meta.MetaSpace;
 import net.imglib2.view.meta.MetaSpaceContainer;
 import net.imglib2.view.meta.MetaSpaceUtils;
@@ -178,22 +185,70 @@ public class IjMetaSpaces
 		space.put( NUMBERS_XY, ArrayImgs.ints( numbersXY, 2, 2 ), axes_XY, axes_none );
 
 		System.out.println( "space contains" );
-		for ( final MetaDatum< ? > datum : space )
-			System.out.println( "   " + datum );
+		space.forEach(
+				datum -> System.out.println( "  " + datum + "\n    value = " + datum.getValue() ) );
 		System.out.println();
 
 		final IjMetaSpace space2 = MetaSpaceViews.permute( space, 0, 2 );
 
 		System.out.println( "space2 contains" );
-		for ( final MetaDatum< ? > datum : space2 )
-			System.out.println( "   " + datum );
+		space2.forEach(
+				datum -> System.out.println( "  " + datum + "\n    value = " + datum.getValue() ) );
 		System.out.println();
 
-		final IjMetaSpace space3 = MetaSpaceViews.hyperSlice( space2, 1, 100 );
+		final IjMetaSpace space3 = MetaSpaceViews.hyperSlice( space2, 1, 1 );
 
 		System.out.println( "space3 contains" );
-		for ( final MetaDatum< ? > datum : space3 )
-			System.out.println( datum.toString() );
+		space3.forEach(
+				datum -> System.out.println( "  " + datum + "\n    value = " + datum.getValue() ) );
 		System.out.println();
+
+		final IjMetaSpace space4 = MetaSpaceViews.hyperSlice( space3, 1, 0 );
+
+		System.out.println( "space4 contains" );
+		space4.forEach(
+				datum -> System.out.println( "  " + datum + "\n    value = " + datum.getValue() ) );
+		System.out.println();
+
+
+
+		System.out.println();
+		System.out.println( "--------------------" );
+		System.out.println();
+
+		printVarying(
+				space
+				.get( axes_none ).getMetaDatum( NUMBERS_XY ) );
+		System.out.println();
+		System.out.println();
+
+		System.out.println( "XCZTY permute" );
+		printVarying(
+				permute( space, 1, 4 )
+				.get( axes_none ).getMetaDatum( NUMBERS_XY ) );
+		System.out.println();
+		System.out.println();
+
+		System.out.println( "CZTY permute hyperslice" );
+		printVarying(
+				hyperSlice( permute( space, 1, 4 ), 0, 1 )
+				.get( axes_none ).getMetaDatum( NUMBERS_XY ) );
+	}
+
+	static void printVarying( final MetaDatum< IntType > datum )
+	{
+		final int n = datum.numDimensions();
+		final int[] dims = new int[ n ];
+		Arrays.fill( dims, 2 );
+		final RandomAccess< IntType > a = datum.getValues().randomAccess();
+		final IntervalIterator i = new IntervalIterator( dims );
+		final int[] coords = new int[ i.numDimensions() ];
+		while( i.hasNext() )
+		{
+			i.fwd();
+			i.localize( coords );
+			a.setPosition( i );
+			System.out.println( Util.printCoordinates( coords ) + " -> " + a.get().get() );
+		}
 	}
 }
