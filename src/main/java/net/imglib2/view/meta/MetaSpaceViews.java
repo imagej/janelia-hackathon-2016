@@ -43,7 +43,7 @@ public class MetaSpaceViews
 			t.set( transformToSource );
 			return source.viewFactory().createView(
 					sourceView.getSource(),
-					t.concatenate( sourceView.getTransformToSource() ) );
+					t.preConcatenate( sourceView.getTransformToSource() ) );
 		}
 		else
 			return source.viewFactory().createView( source, transformToSource );
