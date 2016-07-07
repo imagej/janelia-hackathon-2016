@@ -68,9 +68,6 @@ public interface MetaSpace< S extends MetaSpace< S, T >, T > extends EuclideanSp
 	 */
 	public T get( final OrderedAxisSet position );
 
-	// create thread-safe independent access
-//	public S access();
-
 	// for creating Ts and views of Ts
 	public ElementFactory< T > elementFactory();
 

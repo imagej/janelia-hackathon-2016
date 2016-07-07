@@ -2,25 +2,9 @@ package net.imglib2.view.meta;
 
 import net.imglib2.transform.integer.Mixed;
 import net.imglib2.transform.integer.MixedTransform;
-import net.imglib2.util.Util;
 
 public class MixedTransforms
 {
-
-	public static void main( final String[] args )
-	{
-		final int[] source = new int[] { 1, 2, 3 };
-		final int[] target = new int[ 3 ];
-
-		System.out.println( Util.printCoordinates( source ) );
-
-		final Mixed rotationTransform = getRotationTransform( 0, 1, 3 );
-		rotationTransform.apply( source, target );
-		System.out.println( "rotate(0,1) -> " + Util.printCoordinates( target ) );
-	}
-
-
-
 	/*
 	 * Interrogating (transformed) metadata:
 	 *
@@ -37,9 +21,6 @@ public class MixedTransforms
 	 *
 	 *
 	 */
-
-
-
 
 
 	/**

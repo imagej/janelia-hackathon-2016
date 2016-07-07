@@ -80,45 +80,4 @@ public abstract class MetaSpaceView< S extends MetaSpace< S, T >, T >
 	{
 		return transformToSource;
 	}
-
-//	@Override
-//	public S access()
-//	{
-//		return new Access();
-//	}
-//
-//	class Access implements MetaSpace< S, T >
-//	{
-//		private final OrderedAxisSet sourcePos = new OrderedAxisSet( source.numDimensions() );
-//
-//		@Override
-//		public T get( final OrderedAxisSet position )
-//		{
-//			return MetaSpaceView.this.get( position, sourcePos );
-//		}
-//
-//		@Override
-//		public T getOrCreate( final OrderedAxisSet position )
-//		{
-//			return MetaSpaceView.this.getOrCreate( position, sourcePos );
-//		}
-//
-//		@Override
-//		public MetaSpace< T > access()
-//		{
-//			return MetaSpaceView.this.access();
-//		}
-//
-//		@Override
-//		public int numDimensions()
-//		{
-//			return MetaSpaceView.this.numDimensions();
-//		}
-//
-//		@Override
-//		public MetaSpace.Factory< T > factory()
-//		{
-//			return MetaSpaceView.this.factory();
-//		}
-//	}
 }

@@ -33,10 +33,4 @@ public abstract class MetaSpaceContainer< S extends MetaSpace< S, T >, T >
 		}
 		return t;
 	}
-
-//	@Override
-//	public S access()
-//	{
-//		return ( S ) this;
-//	}
 }
